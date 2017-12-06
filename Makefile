@@ -9,8 +9,7 @@ SRCS = quick_sort.c \
 OBJS = $(SRCS:.c=.o)
 
 all: test
-test: quick_sort.o test.c
-	#$(CC) $(CFLAGS) linkedlist.o main.c -o $(EXECUTABLE)
+test: quick_sort.o test.o sort.h
 	$(CC) $(CFLAGS) $^ -o $@
 	
 clean:

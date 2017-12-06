@@ -2,19 +2,26 @@
 #include <stdlib.h>
 #include <time.h>
 
-
+void swap(int *a, int *b)
+{
+	*a = *a^*b;
+	*b = *a^*b;
+	*a = *a^*b;
+}
 void quick_sort(int* arry, int left, int right)
 {
 	int l, r, temp;
-
+	
+	if (left > right)
+	{
+		return;
+	}
+	
 	l = left;
 	r = right;
 	temp = arry[l];
 
-	if (l >= r)
-	{
-		return;
-	}
+	
 	while (l < r)
 	{
 		while ((l < r) && (temp <= arry[r]))
@@ -28,10 +35,7 @@ void quick_sort(int* arry, int left, int right)
 
 		if (l < r)
 		{
-			int value;
-			value = arry[r];
-			arry[r] = arry[l];
-			arry[l] = value;
+			swap(&arry[l], &arry[r]);
 		}
 	}
 
