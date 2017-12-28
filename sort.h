@@ -4,5 +4,5 @@
 #define  MAX_SIZE  0xffff
 
 void quick_sort(int* arry, int left, int right);
-
+void heap_sort(int* arry, int len);
 #endif
