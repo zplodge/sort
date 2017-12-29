@@ -71,10 +71,43 @@ int print_result(int* arry, int len)
 	return 1;
 }
 
+static int sort(int sort_name, int* arry, int len)
+{
+	struct timeval start_time, end_time;
+	int  sort_time = 0;
+	get_long_time(&start_time);
+
+	switch(sort_name)
+	{
+		case QUICK_SORT:
+			quick_sort(arry, 0, len);
+			printf("quick sort ");
+		break;
+		
+		case HEAP_SORT:
+			heap_sort(arry, len);
+			printf("heap  sort ");
+		break;
+		
+		case MERGE_SORT:
+			merge_sort(arry, 0, len);
+			printf("merge sort ");
+		break;
+		
+		default:
+		break;
+	}
+	
+	get_long_time(&end_time);
+	sort_time = (end_time.tv_sec - start_time.tv_sec)*1000000 + end_time.tv_usec - start_time.tv_usec;
+	printf("time:%d us \n\r", sort_time);
+	print_result(arry, MAX_NUM);
+	return sort_time;
+}
 int  main(void)
 {
 	int i=0, j=0;
-	int quick_sort_average_time = 0, heap_sort_everage_time = 0;
+	int quick_sort_average_time = 0, heap_sort_everage_time = 0, merge_sort_everage_time = 0;
 	int *arry = NULL, *sort_arry = NULL;
 	struct timeval start_time, end_time;
 	struct timeval tp;
@@ -95,7 +128,7 @@ int  main(void)
 	while(j < MAX_RAND)
 	{
 		i = 0;
-		int quick_sort_time = 0, heap_sort_time = 0;
+		int quick_sort_time = 0, heap_sort_time = 0, merge_sort_time = 0;
 		
 		gettimeofday(&tp , NULL);
 		srand(tp.tv_usec);
@@ -103,28 +136,26 @@ int  main(void)
 		{
 			arry[i++] = (1 + (int)(100000000.0*rand()/(RAND_MAX+1.0)));
 		}
-		memcpy(sort_arry, arry, sizeof(int)*(MAX_NUM-1));
-		get_long_time(&start_time);
-		quick_sort(arry, 0, MAX_NUM-1);
-		get_long_time(&end_time);
-		quick_sort_time = (end_time.tv_sec - start_time.tv_sec)*1000000 + end_time.tv_usec - start_time.tv_usec;
-		quick_sort_average_time += quick_sort_time;
-		printf("quick sort time:%d us \n\r", quick_sort_time);
-		print_result(arry, MAX_NUM);
 		
 		memcpy(sort_arry, arry, sizeof(int)*(MAX_NUM-1));
-		get_long_time(&start_time);
-		heap_sort(arry, MAX_NUM);
-		get_long_time(&end_time);
-		heap_sort_time = (end_time.tv_sec - start_time.tv_sec)*1000000 + end_time.tv_usec - start_time.tv_usec;
+		quick_sort_time = sort(QUICK_SORT, arry, MAX_NUM-1);
+		quick_sort_average_time += quick_sort_time;
+		
+		memcpy(sort_arry, arry, sizeof(int)*(MAX_NUM-1));
+		heap_sort_time = sort(HEAP_SORT, arry, MAX_NUM);
 		heap_sort_everage_time += heap_sort_time;
-		printf("heap  sort time:%d us \n\r", heap_sort_time);
-		print_result(arry, MAX_NUM);
+
+		
+		memcpy(sort_arry, arry, sizeof(int)*(MAX_NUM-1));
+		merge_sort_time = sort(MERGE_SORT, arry, MAX_NUM);	
+		merge_sort_everage_time += merge_sort_time;
+		
 		j++;
 	}
 	
 	printf("quick sort average time:%d\n\r", quick_sort_average_time/(MAX_RAND-1));
 	printf("heap  sort average time:%d\n\r", heap_sort_everage_time/(MAX_RAND-1));
+	printf("merge sort average time:%d\n\r", merge_sort_everage_time/(MAX_RAND-1));
 	free(arry);
 	free(sort_arry);
 	
